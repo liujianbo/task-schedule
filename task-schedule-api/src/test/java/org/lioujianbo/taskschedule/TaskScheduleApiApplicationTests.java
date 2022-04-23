@@ -1,4 +1,4 @@
-package com.lioujianbo.taskscheduleapi;
+package org.lioujianbo.taskschedule;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
