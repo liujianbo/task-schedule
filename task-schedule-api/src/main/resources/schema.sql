@@ -37,3 +37,18 @@ create table task (
     update_user varchar(50),
     primary key (task_id)
 );
+
+create table task_ins (
+    ti_id bigint auto_increment,
+    ni_id bigint,
+    task_id bigint,
+    start_time timestamp,
+    end_time timestamp,
+    exec_status varchar(50),
+    error_msg varchar(255),
+    create_time timestamp,
+    create_user varchar(50),
+    update_time timestamp,
+    update_user varchar(50),
+    primary key (ti_id)
+);

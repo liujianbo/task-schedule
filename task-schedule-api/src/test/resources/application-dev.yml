@@ -1,0 +1,39 @@
+spring:
+  application:
+    name: task-schedule-api
+  jackson:
+    date-format: yyyy-MM-dd HH:mm:ss
+    time-zone: GMT+8
+    default-property-inclusion: non_null
+  redis:
+    host: 127.0.0.1
+    jedis:
+      pool:
+        max-active: 20
+  jpa:
+    properties:
+      hibernate:
+        show_sql: true
+  datasource:
+    name: test
+    url: jdbc:mysql://localhost:3306/task_schedule?useUnicode=true&characterEncoding=UTF8
+    username: root
+    password: 123456
+    driver-class-name: com.mysql.jdbc.Driver
+    type: com.alibaba.druid.pool.DruidDataSource
+    filters: stat
+    maxActive: 20
+    initialSize: 1
+    maxWait: 60000
+    minIdle: 1
+    timeBetweenEvictionRunsMillis: 60000
+    minEvictableIdleTimeMillis: 300000
+    validationQuery: select 'x'
+    testWhileIdle: true
+    testOnBorrow: false
+    testOnReturn: false
+    poolPreparedStatements: true
+    maxOpenPreparedStatements: 20
+  mvc:
+    servlet:
+      load-on-startup: 1
