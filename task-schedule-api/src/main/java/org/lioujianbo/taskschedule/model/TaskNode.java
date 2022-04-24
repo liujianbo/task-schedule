@@ -6,20 +6,20 @@ import javax.persistence.*;
 import java.io.Serializable;
 
 @Entity
-@Table(name = "task")
+@Table(name = "task_node")
 @Builder
 @Data
 @EqualsAndHashCode(callSuper = true)
 @ToString(callSuper = true)
 @NoArgsConstructor
 @AllArgsConstructor
-public class Task extends BaseEntity implements Serializable {
+public class TaskNode extends BaseEntity implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer taskId;
-    private String taskName;
-    private String taskDescription;
-    private String taskType; // ECHO;WAIT;EXCEPTION;SHELL
-    private String taskConfig;
-    private String taskContent;
+    private Integer nodeId;
+    private Integer flowId;
+    private Integer flowVersion;
+    private String taskIds;
+    private String nodeType;// START;TASK;END
+    private Integer prevNode;
 }

@@ -1,11 +1,8 @@
-drop table task_flow if exists;
-drop table task_node if exists;
-drop table task if exists;
-
 create table task_flow (
     flow_id bigint auto_increment,
     flow_name varchar(255),
     flow_description varchar(255),
+    flow_version bigint,
     create_time timestamp,
     create_user varchar(50),
     update_time timestamp,
@@ -15,11 +12,11 @@ create table task_flow (
 
 create table task_node (
     node_id bigint auto_increment,
-    task_id bigint,
     flow_id bigint,
+    flow_version bigint,
+    task_ids varchar(50),
     node_type varchar(50),
-    prev_node varchar(50),
-    next_node varchar(50),
+    prev_node bigint,
     create_time timestamp,
     create_user varchar(50),
     update_time timestamp,
@@ -28,7 +25,7 @@ create table task_node (
 );
 
 create table task (
-    task_id bigint not null,
+    task_id bigint auto_increment,
     task_name varchar(255),
     task_description varchar(255),
     task_type varchar(50),
