@@ -1,6 +1,23 @@
 # task-schedule
 LiveRamp Cast Test 
 
+# 主要功能说明
+
+## 已实现
+
+1. 通过 REST API 中的，save task 和 save task flow 接口可以对任务进行编排
+2. task flow 和 task node 供任务编排使用，具体执行任务在 task 中进行配置
+3. 目前 task 有 ECHO;WAIT;EXCEPTION 几种测试用的实现
+4. 通过 start flow 接口可以启动一个任务流程实例，流程节点会按顺序执行
+5. 节点执行时，将任务提交分布式缓存，从而实现服务支持横向拓展
+6. 定时轮询缓存中待执行任务，取得任务后清除缓存并启动任务执行
+7. 任务执行完成后，更新任务状态、节点状态及流程状态
+
+## 待实现
+
+1. task node 可以设置节点完成条件（当前实现为节点中任意 task 执行成功即可向下执行）
+2. task flow 任务状态监控
+
 # 开发环境
 - 语言：Java 8
 - 依赖管理：Maven
@@ -206,7 +223,7 @@ LiveRamp Cast Test
     ```
     start flow
     request url: POST /exec/flow/{flowId}
-   
+      
     retry flow
     request url: POST /exec/flow/{flowId}
     request body:
@@ -214,7 +231,7 @@ LiveRamp Cast Test
         "fiId":1, //
         "niId":1
     }
-   
+      
     start task
     request url: POST /exec/task/{taskId}
     ```
