@@ -38,6 +38,35 @@ create table task (
     primary key (task_id)
 );
 
+create table task_flow_ins (
+    fi_id bigint auto_increment,
+    flow_id bigint,
+    start_time timestamp,
+    end_time timestamp,
+    status varchar(50),
+    error_msg varchar(255),
+    create_time timestamp,
+    create_user varchar(50),
+    update_time timestamp,
+    update_user varchar(50),
+    primary key (fi_id)
+);
+
+create table task_node_ins (
+    ni_id bigint auto_increment,
+    fi_id bigint,
+    node_id bigint,
+    start_time timestamp,
+    end_time timestamp,
+    status varchar(50),
+    error_msg varchar(255),
+    create_time timestamp,
+    create_user varchar(50),
+    update_time timestamp,
+    update_user varchar(50),
+    primary key (ni_id)
+);
+
 create table task_ins (
     ti_id bigint auto_increment,
     ni_id bigint,

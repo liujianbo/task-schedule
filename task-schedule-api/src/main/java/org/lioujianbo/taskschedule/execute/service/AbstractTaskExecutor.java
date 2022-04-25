@@ -16,6 +16,13 @@ public abstract class AbstractTaskExecutor implements TaskExecutor {
         this.taskInsRepository = taskInsRepository;
     }
 
+    TaskNodeExecuteService taskNodeExecuteService;
+
+    @Autowired
+    public final void setTaskNodeExecuteService(TaskNodeExecuteService taskNodeExecuteService) {
+        this.taskNodeExecuteService = taskNodeExecuteService;
+    }
+
     void afterExec(Task task, Integer tiId, Integer niId, String execStatus, String errorMsg) {
         TaskIns taskIns = getTaskIns(tiId);
         taskIns.setEndTime(new Date());
@@ -23,6 +30,9 @@ public abstract class AbstractTaskExecutor implements TaskExecutor {
         taskIns.setErrorMsg(errorMsg);
 
         taskInsRepository.save(taskIns);
+        if (niId != null) {
+            taskNodeExecuteService.afterExec(task, niId, execStatus, errorMsg);
+        }
     }
 
     public TaskIns getTaskIns (Integer tiId) {

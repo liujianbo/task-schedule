@@ -1,18 +1,274 @@
 # task-schedule
 LiveRamp Cast Test 
 
+# 开发环境
+- 语言：Java 8
+- 依赖管理：Maven
+- 数据库：MySQL
+- 缓存：Redis
+
 # core function
-1. task schedule
+1. task schedule maintain
 2. task flow execute
 3. task flow monitor
-4. distribute deploy
+4. distribute deploy support
 
 # module
-REST API
+## REST API
 1. create/update/delete task flow
+   ```
+   save task flow
+   request url: POST /flow
+   request body:
+   {
+    "flowId":1,
+    "flowName":"first flow",
+    "flowDescription":"first flow for test1",
+    "flowNodes":[
+            {
+                "nodeType":"START"
+            },
+            {
+                "nodeType":"TASK",
+                "taskIds":"1"
+            },
+            {
+                "nodeType":"TASK",
+                "taskIds":"2"
+            },
+            {
+                "nodeType":"TASK",
+                "taskIds":"3"
+            },
+            {
+                "nodeType":"TASK",
+                "taskIds":"1"
+            },
+            {
+                "nodeType":"END"
+            }
+        ]
+    }
+   
+   response:
+   {
+        "code": "200",
+        "message": "SUCCESS",
+        "data": {
+            "flowId": 1,
+            "flowName": "first flow",
+            "flowDescription": "first flow for test1",
+            "flowNodes": [
+                {
+                    "nodeId": 41,
+                    "nodeType": "START",
+                    "createTime": "2022-04-25 09:50:12",
+                    "updateTime": "2022-04-25 09:50:12"
+                },
+                {
+                    "nodeId": 42,
+                    "tasks": [
+                        {
+                            "createTime": "2022-04-24 11:35:39",
+                            "updateTime": "2022-04-24 19:28:53",
+                            "taskId": 1,
+                            "taskName": "first task1",
+                            "taskType": "ECHO"
+                        }
+                    ],
+                    "nodeType": "TASK",
+                    "prevNode": 41,
+                    "createTime": "2022-04-25 09:50:12",
+                    "updateTime": "2022-04-25 09:50:12"
+                },
+                {
+                    "nodeId": 43,
+                    "tasks": [
+                        {
+                            "createTime": "2022-04-24 19:29:46",
+                            "updateTime": "2022-04-24 19:29:46",
+                            "taskId": 2,
+                            "taskName": "wait task1",
+                            "taskType": "WAIT"
+                        }
+                    ],
+                    "nodeType": "TASK",
+                    "prevNode": 42,
+                    "createTime": "2022-04-25 09:50:12",
+                    "updateTime": "2022-04-25 09:50:12"
+                },
+                {
+                    "nodeId": 44,
+                    "tasks": [
+                        {
+                            "createTime": "2022-04-24 19:30:04",
+                            "updateTime": "2022-04-24 19:30:04",
+                            "taskId": 3,
+                            "taskName": "exception task1",
+                            "taskType": "EXCEPTION"
+                        }
+                    ],
+                    "nodeType": "TASK",
+                    "prevNode": 43,
+                    "createTime": "2022-04-25 09:50:12",
+                    "updateTime": "2022-04-25 09:50:12"
+                },
+                {
+                    "nodeId": 45,
+                    "tasks": [
+                        {
+                            "createTime": "2022-04-24 11:35:39",
+                            "updateTime": "2022-04-24 19:28:53",
+                            "taskId": 1,
+                            "taskName": "first task1",
+                            "taskType": "ECHO"
+                        },
+                        {
+                            "createTime": "2022-04-24 19:29:46",
+                            "updateTime": "2022-04-24 19:29:46",
+                            "taskId": 2,
+                            "taskName": "wait task1",
+                            "taskType": "WAIT"
+                        },
+                        {
+                            "createTime": "2022-04-24 19:30:04",
+                            "updateTime": "2022-04-24 19:30:04",
+                            "taskId": 3,
+                            "taskName": "exception task1",
+                            "taskType": "EXCEPTION"
+                        }
+                    ],
+                    "nodeType": "TASK",
+                    "prevNode": 44,
+                    "createTime": "2022-04-25 09:50:12",
+                    "updateTime": "2022-04-25 09:50:12"
+                },
+                {
+                    "nodeId": 46,
+                    "nodeType": "END",
+                    "prevNode": 45,
+                    "createTime": "2022-04-25 09:50:12",
+                    "updateTime": "2022-04-25 09:50:12"
+                }
+            ],
+            "createTime": "2022-04-24 13:57:59",
+            "updateTime": "2022-04-25 09:50:12"
+        }
+    }
+   
+   task flow detail
+   request url: GET /flow/{flowId}
+   response:
+   same as above
+   ```
 2. create/update/delete task
-3. task flow monitor
-4. task flow execute
+   ```
+   save task
+   request url: POST /task
+   request body:
+   {
+        "taskName":"exception task1",
+        "taskType":"EXCEPTION",
+        "taskContent":"task content"
+    }
+   
+   response:
+   {
+        "code": "200",
+        "message": "SUCCESS",
+        "data": {
+            "createTime": "2022-04-24 19:30:04",
+            "updateTime": "2022-04-24 19:30:04",
+            "taskId": 3,
+            "taskName": "exception task1",
+            "taskType": "EXCEPTION",
+            "taskContent":"task content"
+        }
+    }
+   
+   task detail
+   request url: GET /task/{taskId}
+   response:
+   {
+        "code": "200",
+        "message": "SUCCESS",
+        "data": {
+            "createTime": "2022-04-24 19:30:04",
+            "updateTime": "2022-04-24 19:30:04",
+            "taskId": 3,
+            "taskName": "exception task1",
+            "taskType": "EXCEPTION",
+            "taskContent":"task content"
+        }
+    }
+   ```
+3. task flow execute
+    ```
+    start flow
+    request url: POST /exec/flow/{flowId}
+   
+    retry flow
+    request url: POST /exec/flow/{flowId}
+    request body:
+    {
+        "fiId":1, //
+        "niId":1
+    }
+   
+    start task
+    request url: POST /exec/task/{taskId}
+    ```
+4. task flow monitor (TODO)
+   ```
+    task flow execute history
+   request url: POST /monitor/flow
+   request body:
+   {
+        "flowId":1, //optional, filter condition
+        "fiId":1 //optional
+    }
+   
+   response:
+   {
+        "code": "200",
+        "message": "SUCCESS",
+        "data": [{
+            "fiId":1,
+            "flowId": 1,
+            "flowName": "first flow",
+            "startTime": "2022-04-24 19:30:04",
+            "endTime": "2022-04-24 19:30:04"
+            "status": "SUCCESS",
+            "errorMsg": "",
+            "createTime": "2022-04-24 19:30:04",
+            "updateTime": "2022-04-24 19:30:04"
+        },...]
+    }
+   
+   task flow execute history detail
+   request url: POST /monitor/flow/detail/{fiId}
+   response:
+   {
+        "code": "200",
+        "message": "SUCCESS",
+        "data": [{
+            "niId":1,
+            "fiId": 1,
+            "startTime": "2022-04-24 19:30:04",
+            "endTime": "2022-04-24 19:30:04"
+            "status": "SUCCESS",
+            "errorMsg": "",
+            "createTime": "2022-04-24 19:30:04",
+            "updateTime": "2022-04-24 19:30:04"
+        },...]
+    }
+   ```
+## schedule executor
+1. 启动任务后自动寻找开始节点，开始任务执行
+2. 节点任务同时提交分布式缓存(可替换为MQ)，更新节点状态为执行中
+3. 定时获取(MQ消费)待执行任务，并开始执行
+4. 任务执行完成后，更新节点状，并执行下一节点任务（失败或结束时，更新流程状态）
+5. 节点存在多个 task 时，需要满足完成指定的任务数才能往下继续执行（TODO，当前实现为其中一个任务成功即可向下执行）
 
 # data module
 ## task_flow
@@ -63,6 +319,7 @@ REST API
 | start_time | timestamp |  |
 | end_time | timestamp |  |
 | status | varchar | flow 执行状态，RUNNING;SUCCESS;FAILED |
+| error_msg | varchar | 失败信息 |
 | create_time | timestamp |  |
 | create_user | varchar |  |
 | update_time | timestamp |  |
